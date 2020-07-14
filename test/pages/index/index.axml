@@ -1,3 +1,8 @@
 <view>
     This is test miniapp
+    <navigator url="/pages/detail/index?query=detail">
+        <button type="primary" onTap="">
+            go to detail
+        </button>
+    </navigator>
 </view>

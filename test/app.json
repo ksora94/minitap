@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/detail/index"
   ],
   "window": {
     "defaultTitle": "Test App"
