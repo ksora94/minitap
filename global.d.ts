@@ -1,5 +1,5 @@
-declare let App: (options: {[key: string]: any}) => any;
-declare let Page: (options: {[key: string]: any}) => any;
+declare let App:  any;
+declare let Page: any;
 
 
 declare let my: {
@@ -13,3 +13,6 @@ declare let my: {
 declare const __VERSION: string;
 
 declare let getCurrentPages: () => any;
+
+declare let getApp: () => any;
+

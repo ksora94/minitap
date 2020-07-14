@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const package = require("./package.json");
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 
-const distFileName = 'excepturer.min.js';
+const distFileName = 'minitap.min.js';
 
 const config = {
   entry: './src/index.ts',
@@ -20,7 +20,7 @@ const config = {
     extensions: ['.ts', '.js']
   },
   output: {
-    filename: 'excepturer.js',
+    filename: 'minitap.js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd'
   },

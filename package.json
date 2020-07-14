@@ -2,8 +2,12 @@
   "name": "minitap",
   "version": "0.0.1",
   "description": "proxy App & Page in alipay miniapp",
-  "main": "dist/index.js",
-  "scripts": {},
+  "main": "dist/minitap.min.js",
+  "typings": "index.d.ts",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "dev": "webpack --watch --mode=development"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ksora94/minitap.git"

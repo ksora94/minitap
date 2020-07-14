@@ -8,6 +8,11 @@
     "noImplicitThis": false,
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "lib": [
+      "dom",
+      "es6",
+      "scripthost"
+    ]
   }
 }
