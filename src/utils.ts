@@ -16,7 +16,7 @@ export const event = {
   },
   trigger(name, ...args) {
     if (event.$[name]) {
-      return event.$[name].map(handler => handler(...args))
+      return event.$[name].map(handler => handler.apply(this, args))
     }
   }
 }

@@ -1,5 +1,7 @@
 Page({
-  data: {},
+  data: {
+    name: 'index'
+  },
   onLoad() {
 
   }

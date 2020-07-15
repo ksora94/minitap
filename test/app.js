@@ -5,7 +5,7 @@ tap('app', 'onLaunch', function () {
 });
 
 tap('app', 'onShow', function () {
-  console.log('onShow');
+  console.log('onShow', this);
 });
 
 tap('app', 'onHide', function () {
@@ -23,6 +23,10 @@ tap('app', 'onShareAppMessage', function () {
 tap('app', 'onUnhandledRejection', function () {
   console.log('onUnhandledRejection');
 });
+
+tap('page', 'onShow', function () {
+  console.log('page: onShow', this)
+})
 
 App({
   onLaunch(options) {

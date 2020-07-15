@@ -25,14 +25,6 @@ function createMethodProxy(method, callback) {
   })
 }
 
-function createAppEvent(eventName, ...args) {
-  return event.trigger('app:' + eventName, ...args);
-}
-
-function createPageEvent(eventName, ...args) {
-  return event.trigger('page@' + eventName, ...args)
-}
-
 /**
  * 创建小程序App对象代理
  */
@@ -41,7 +33,7 @@ function proxyApp() {
     apply(app, thisArg, argArray) {
       return app(APP_PROXY_METHODS.reduce((arg, methodName) => {
         arg[methodName] = createMethodProxy(arg[methodName], function(params) {
-          createAppEvent(methodName, ...params)
+          event.trigger.call(this, 'app:' + methodName, ...params)
         });
         return arg;
       }, argArray[0]));
@@ -58,14 +50,16 @@ function proxyPage() {
         argArray[0].events = PAGE_EVENTS_PROXY_METHODS.reduce((evs, methodName) => {
           evs[methodName] =
               createMethodProxy(evs[methodName], function(params) {
-                createPageEvent(`${this.route}:${methodName}`, ...params)
+                event.trigger.call(this, `page@${this.route}:${methodName}`, ...params)
+                event.trigger.call(this, `page:${methodName}`, ...params)
               })
           return evs;
         }, argArray[0].events || {});
 
         return page(PAGE_PROXY_METHODS.reduce((arg, methodName) => {
           arg[methodName] = createMethodProxy(arg[methodName], function(params) {
-            createPageEvent(`${this.route}:${methodName}`, ...params)
+            event.trigger.call(this, `page@${this.route}:${methodName}`, ...params)
+            event.trigger.call(this, `page:${methodName}`, ...params)
           })
           return arg;
         }, argArray[0]))
@@ -79,11 +73,11 @@ function proxyPage() {
  * @param eventName 'onShow', 'onHide', ....
  * @param callback
  */
-export function tap(scope: 'app' | string, eventName: string, callback) {
-  if (scope === 'app') {
-    event.on('app:' + eventName, callback);
-  } else {
-    event.on('page@' + scope + ':' + eventName, callback);
+export function tap(scope: 'app' | 'page' | string, eventName: string, callback) {
+  switch (scope) {
+    case 'app': event.on('app:' + eventName, callback); break;
+    case 'page': event.on('page:' + eventName, callback); break;
+    default: event.on('page@' + scope + ':' + eventName, callback); break;
   }
 }
 
@@ -93,11 +87,11 @@ export function tap(scope: 'app' | string, eventName: string, callback) {
  * @param eventName 'onShow', 'onHide', ....
  * @param callback 可选，为空则该事件下的回调全部取消
  */
-export function off(scope: 'app' | string, eventName: string, callback?) {
-  if (scope === 'app') {
-    event.off('app:' + eventName, callback);
-  } else {
-    event.off('page@' + scope + ':' + eventName, callback);
+export function off(scope: 'app' | 'page' | string, eventName: string, callback?) {
+  switch (scope) {
+    case 'app': event.off('app:' + eventName, callback); break;
+    case 'page': event.off('page:' + eventName, callback); break;
+    default: event.off('page@' + scope + ':' + eventName, callback); break;
   }
 }
 
