@@ -26,6 +26,11 @@ tap('pages/detail/index', 'onShow', (data) => {
     console.log('detail:onShow', data);
 })
 
+// 监听所有页面
+tap('page', 'onShow', (data) => {
+    console.log('detail:onShow', data);
+})
+
 Page({
   data: {},
   onLoad() {
