@@ -96,7 +96,7 @@ export function off(scope: 'app' | 'page' | string, eventName: string, callback?
 }
 
 // 防止重复挂载
-if (!App.__minitaped) {
+if (Proxy && !App.__minitaped) {
   proxyApp();
   proxyPage();
   App.__minitaped = true;
