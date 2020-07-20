@@ -17,27 +17,21 @@ const event = App.__minitap_event = App.__minitap_event || utils.event;
  * @param callback
  */
 function createMethodProxy(method, callback) {
-  return new Proxy(method || function () {}, {
-    apply(func, that, params) {
-      callback.call(that, params);
-      return func.apply(that, params);
-    }
-  })
+  return utils.createProxy(method || function () {}, callback)
 }
 
 /**
  * 创建小程序App对象代理
  */
 function proxyApp() {
-  App = new Proxy(App, {
-    apply(app, thisArg, argArray) {
-      return app(APP_PROXY_METHODS.reduce((arg, methodName) => {
-        arg[methodName] = createMethodProxy(arg[methodName], function(params) {
-          event.trigger.call(this, 'app:' + methodName, ...params)
-        });
-        return arg;
-      }, argArray[0]));
-    }
+  App = utils.createProxy(App, function (app, argArray) {
+    return app(APP_PROXY_METHODS.reduce((arg, methodName) => {
+      arg[methodName] = createMethodProxy(arg[methodName], function (method, params) {
+        event.trigger.call(this, 'app:' + methodName, ...params);
+        method.apply(this, params);
+      });
+      return arg;
+    }, argArray[0]));
   })
 }
 
@@ -45,25 +39,25 @@ function proxyApp() {
  * 创建小程序Page对象代理
  */
 function proxyPage() {
-  Page = new Proxy(Page, {
-    apply(page, thisArg, argArray) {
-        argArray[0].events = PAGE_EVENTS_PROXY_METHODS.reduce((evs, methodName) => {
-          evs[methodName] =
-              createMethodProxy(evs[methodName], function(params) {
-                event.trigger.call(this, `page@${this.route}:${methodName}`, ...params)
-                event.trigger.call(this, `page:${methodName}`, ...params)
-              })
-          return evs;
-        }, argArray[0].events || {});
-
-        return page(PAGE_PROXY_METHODS.reduce((arg, methodName) => {
-          arg[methodName] = createMethodProxy(arg[methodName], function(params) {
-            event.trigger.call(this, `page@${this.route}:${methodName}`, ...params)
-            event.trigger.call(this, `page:${methodName}`, ...params)
+  Page = utils.createProxy(Page, function (page, argArray) {
+    argArray[0].events = PAGE_EVENTS_PROXY_METHODS.reduce((evs, methodName) => {
+      evs[methodName] =
+          createMethodProxy(evs[methodName], function (method, params) {
+            event.trigger.call(this, `page@${this.route}:${methodName}`, ...params);
+            event.trigger.call(this, `page:${methodName}`, ...params);
+            method.apply(this, params);
           })
-          return arg;
-        }, argArray[0]))
-    }
+      return evs;
+    }, argArray[0].events || {});
+
+    return page(PAGE_PROXY_METHODS.reduce((arg, methodName) => {
+      arg[methodName] = createMethodProxy(arg[methodName], function (method, params) {
+        event.trigger.call(this, `page@${this.route}:${methodName}`, ...params);
+        event.trigger.call(this, `page:${methodName}`, ...params);
+        method.apply(this, params);
+      })
+      return arg;
+    }, argArray[0]))
   })
 }
 
@@ -75,9 +69,15 @@ function proxyPage() {
  */
 export function tap(scope: 'app' | 'page' | string, eventName: string, callback) {
   switch (scope) {
-    case 'app': event.on('app:' + eventName, callback); break;
-    case 'page': event.on('page:' + eventName, callback); break;
-    default: event.on('page@' + scope + ':' + eventName, callback); break;
+    case 'app':
+      event.on('app:' + eventName, callback);
+      break;
+    case 'page':
+      event.on('page:' + eventName, callback);
+      break;
+    default:
+      event.on('page@' + scope + ':' + eventName, callback);
+      break;
   }
 }
 
@@ -89,14 +89,20 @@ export function tap(scope: 'app' | 'page' | string, eventName: string, callback)
  */
 export function off(scope: 'app' | 'page' | string, eventName: string, callback?) {
   switch (scope) {
-    case 'app': event.off('app:' + eventName, callback); break;
-    case 'page': event.off('page:' + eventName, callback); break;
-    default: event.off('page@' + scope + ':' + eventName, callback); break;
+    case 'app':
+      event.off('app:' + eventName, callback);
+      break;
+    case 'page':
+      event.off('page:' + eventName, callback);
+      break;
+    default:
+      event.off('page@' + scope + ':' + eventName, callback);
+      break;
   }
 }
 
 // 防止重复挂载
-if (Proxy && !App.__minitaped) {
+if (!App.__minitaped) {
   proxyApp();
   proxyPage();
   App.__minitaped = true;

@@ -20,3 +20,20 @@ export const event = {
     }
   }
 }
+
+export const createProxy = function () {
+  if (Proxy) {
+    return function (target, callback) {
+      return new Proxy(target, {
+        apply(func, that, params) {
+          return callback.call(that, func, params);
+        }
+      })
+    }
+  }
+  return function (target, callback) {
+    return function (...params) {
+      return callback.call(this, target, params);
+    }
+  }
+}();

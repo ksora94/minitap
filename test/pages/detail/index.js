@@ -13,7 +13,7 @@ import tap from '../../minitap.min';
   'onBack'
 ].forEach(methodName => {
   tap('pages/detail/index', methodName, function (data) {
-    console.log('detail:'+methodName, data, this);
+    console.log('%cdetail:'+methodName, 'color:#02e;', data, this);
   })
 });
 

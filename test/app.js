@@ -24,8 +24,8 @@ tap('app', 'onUnhandledRejection', function () {
   console.log('onUnhandledRejection');
 });
 
-tap('page', 'onShow', function () {
-  console.log('page: onShow', this)
+tap('page', 'onShow', function (params) {
+  console.log('%cpage: onShow', 'color:#0e2;', params, this)
 })
 
 App({
