@@ -22,18 +22,23 @@ export const event = {
 }
 
 export const createProxy = function () {
-  if (Proxy) {
-    return function (target, callback) {
-      return new Proxy(target, {
-        apply(func, that, params) {
-          return callback.call(that, func, params);
-        }
-      })
+  try {
+    if (Proxy) {
+      return function (target, callback) {
+        return new Proxy(target, {
+          apply(func, that, params) {
+            return callback.call(that, func, params);
+          }
+        })
+      }
+    } else {
+      throw new Error('Proxy not exist');
     }
-  }
-  return function (target, callback) {
-    return function (...params) {
-      return callback.call(this, target, params);
+  } catch (e) {
+    return function (target, callback) {
+      return function (...params) {
+        return callback.call(this, target, params);
+      }
     }
   }
 }();
