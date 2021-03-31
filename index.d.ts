@@ -1,6 +1,6 @@
-type MTAppEvent = 'onLaunch' | 'onShow' | 'onHide' | 'onError' | 'onShareAppMessage' | 'onUnhandledRejection';
+type MTAppEvent = 'onLaunch' | 'onShow' | 'onHide' | 'onError' | 'onUnhandledRejection';
 
-type MTPageEvent = 'onLoad' | 'onShow' | 'onReady' | 'onHide' | 'onUnload' | 'onTitleClick' | 'onPullDownRefresh' | 'onReachBottom' | 'onShareAppMessage' | 'onBack';
+type MTPageEvent = 'onLoad' | 'onShow' | 'onReady' | 'onHide' | 'onUnload' | 'onTitleClick' | 'onPullDownRefresh' | 'onReachBottom' | 'onBack';
 
 type MTCallback = (...args: any[]) => any;
 

@@ -1,8 +1,8 @@
 import * as utils from './utils';
 
-const APP_PROXY_METHODS = ['onLaunch', 'onShow', 'onHide', 'onError', 'onShareAppMessage', 'onUnhandledRejection'];
+const APP_PROXY_METHODS = ['onLaunch', 'onShow', 'onHide', 'onError', 'onUnhandledRejection'];
 
-const PAGE_PROXY_METHODS = ['onLoad', 'onShow', 'onReady', 'onHide', 'onUnload', 'onTitleClick', 'onPullDownRefresh', 'onReachBottom', 'onShareAppMessage'];
+const PAGE_PROXY_METHODS = ['onLoad', 'onShow', 'onReady', 'onHide', 'onUnload', 'onTitleClick', 'onPullDownRefresh', 'onReachBottom'];
 
 const PAGE_EVENTS_PROXY_METHODS = ['onBack'];
 
