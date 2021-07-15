@@ -1,6 +1,6 @@
 {
   "name": "minitap",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "proxy App & Page in alipay miniapp",
   "main": "dist/minitap.min.js",
   "typings": "index.d.ts",

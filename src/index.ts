@@ -62,18 +62,46 @@ function proxyPage() {
 }
 
 /**
+ * 创建request代理
+ */
+function proxyRequest() {
+  my.request = utils.createProxy(my.request, function (request, [config]) {
+    const startTime = utils.now();
+
+    return request({
+      ...config,
+      success(...args) {
+        const dur = utils.now() - startTime;
+
+        config.success && config.success(...args);
+        event.trigger.call(this, 'request', dur, config);
+        event.trigger.call(this, `request:${config.url}`, dur, config);
+      }
+    })
+  })
+}
+
+
+/**
  * 监听事件
  * @param scope 'app' | 'pages/index/index' ...
  * @param eventName 'onShow', 'onHide', ....
  * @param callback
  */
-export function tap(scope: 'app' | 'page' | string, eventName: string, callback) {
+export function tap(scope: 'app' | 'page' | 'request' | string, eventName: string, callback) {
   switch (scope) {
     case 'app':
       event.on('app:' + eventName, callback);
       break;
     case 'page':
       event.on('page:' + eventName, callback);
+      break;
+    case 'request':
+      if (eventName) {
+        event.on('request:' + eventName, callback);
+      } else {
+        event.on('request', callback);
+      }
       break;
     default:
       event.on('page@' + scope + ':' + eventName, callback);
@@ -87,13 +115,20 @@ export function tap(scope: 'app' | 'page' | string, eventName: string, callback)
  * @param eventName 'onShow', 'onHide', ....
  * @param callback 可选，为空则该事件下的回调全部取消
  */
-export function off(scope: 'app' | 'page' | string, eventName: string, callback?) {
+export function off(scope: 'app' | 'page' | 'request' | string, eventName: string, callback?) {
   switch (scope) {
     case 'app':
       event.off('app:' + eventName, callback);
       break;
     case 'page':
       event.off('page:' + eventName, callback);
+      break;
+    case 'request':
+      if (eventName) {
+        event.off('request:' + eventName, callback);
+      } else {
+        event.off('request', callback);
+      }
       break;
     default:
       event.off('page@' + scope + ':' + eventName, callback);
@@ -105,6 +140,7 @@ export function off(scope: 'app' | 'page' | string, eventName: string, callback?
 if (!App.__minitaped) {
   proxyApp();
   proxyPage();
+  proxyRequest();
   App.__minitaped = true;
 }
 

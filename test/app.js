@@ -28,6 +28,14 @@ tap('page', 'onShow', function (params) {
   console.log('%cpage: onShow', 'color:#0e2;', params, this)
 })
 
+tap('request', null, function (dur, config) {
+  console.log('request', dur, config);
+})
+
+tap('request', 'https://httpbin.org/post', function (dur, config) {
+  console.log('request:https://httpbin.org/post', dur, config);
+})
+
 App({
   onLaunch(options) {
   },

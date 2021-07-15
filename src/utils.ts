@@ -42,3 +42,7 @@ export const createProxy = function () {
     }
   }
 }();
+
+export function now() {
+  return +new Date();
+}
