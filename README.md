@@ -39,16 +39,31 @@ Page({
 });
 ```
 
+### Request
+```javascript
+import tap from 'minitap'
+
+// 监听所有请求
+tap('request', null, (duration, config) => {
+    console.log('all request', duration, config);
+})
+
+// 监听单个请求
+tap('request', 'https://xxxxx', (duration, config) => {
+    console.log('request', duration, config);
+})
+```
+
 ## API
 
 ### 监听原生对象方法
 > tap(scope, eventName, callback)
- * scope: 'app' | 'page' | 'pages/index/index' ...
+ * scope: 'app' | 'page' | 'pages/index/index' | 'request' ...
  * eventName: 'onShow', 'onHide', ....
  * callback
  
 ### 取消监听
 > off(scope, eventName, callback?)
-* scope: 'app' | 'page' | 'pages/index/index' ...
+* scope: 'app' | 'page' | 'pages/index/index' | 'request' ...
 * eventName: 'onShow', 'onHide', ....
 * callback(optional)
