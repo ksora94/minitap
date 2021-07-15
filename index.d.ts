@@ -15,7 +15,7 @@ export declare function tap(scope: 'app', eventName: MTAppEvent, callback: MTCal
 
 export declare function tap(scope: 'page' | string, eventName: MTPageEvent, callback: MTCallback);
 
-export declare function tap(scope: 'request', eventName: string | null, callback: (dur: number, config: RequestConfig) => void);
+export declare function tap(scope: 'request', eventName: string | null, callback: (dur: number, config: RequestConfig, data: any) => void);
 
 export declare function off(scope: 'app', eventName: MTAppEvent, callback?: MTCallback);
 

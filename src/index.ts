@@ -74,8 +74,13 @@ function proxyRequest() {
         const dur = utils.now() - startTime;
 
         config.success && config.success(...args);
-        event.trigger.call(this, 'request', dur, config);
-        event.trigger.call(this, `request:${config.url}`, dur, config);
+        event.trigger.call(this, 'request', dur, config, ...args);
+        event.trigger.call(this, `request:${config.url}`, dur, config, ...args);
+      },
+      fail(...args) {
+        config.fail && config.fail(...args);
+        event.trigger.call(this, 'request', -1, config, ...args);
+        event.trigger.call(this, `request:${config.url}`, -1, config, ...args);
       }
     })
   })
