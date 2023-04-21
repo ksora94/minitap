@@ -12,6 +12,31 @@ const PAGE_EVENTS_PROXY_METHODS = ['onBack'];
 const event = App.__minitap_event = App.__minitap_event || utils.event;
 
 /**
+ * 获取跨平台的 SDK
+ */
+const getSDK = () => {
+  let currentSdk;
+
+  if (typeof wx === 'object') {
+    currentSdk = wx;
+  } else if (typeof dd === 'object') {
+    currentSdk = dd;
+  } else if (typeof my === 'object') {
+    currentSdk = my;
+  } else if (typeof tt === 'object') {
+    currentSdk = tt;
+  } else if (typeof qq === 'object') {
+    currentSdk = qq;
+  } else if (typeof swan === 'object') {
+    currentSdk = swan;
+  }
+
+  return currentSdk;
+};
+
+const sdk = getSDK();
+
+/**
  * 创建方法代理
  * @param method 如果不存在则新建一个function
  * @param callback
@@ -65,7 +90,7 @@ function proxyPage() {
  * 创建request代理
  */
 function proxyRequest() {
-  my.request = utils.createProxy(my.request, function (request, [config]) {
+  sdk.request = utils.createProxy(sdk.request, function (request, [config]) {
     const startTime = utils.now();
 
     return request({
